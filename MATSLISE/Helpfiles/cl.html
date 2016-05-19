@@ -1,0 +1,317 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html lang="en"><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <title>Using MATSLISE from the command line</title><link rel="stylesheet" href="docstyle.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.52.2">
+  <meta http-equiv="Content-Script-Type" content="text/javascript"><meta name="toctype" content="ug"><script language="JavaScript" src="docscripts.js"></script></head>
+
+
+
+<body><a name="top_of_page"></a><p style="font-size:1px;">&nbsp;</p>
+ 
+<a name="f76-678107"></a><a class="indexterm" name="zmw57dd0e312235"></a><h1 class="reftitle">Using MATSLISE from the MATLAB command line</h1>
+<p>MATSLISE comes with a Graphical User Interface (GUI) which makes the package user-friendly and easy-to-use. The MATLAB functions underlying this GUI can however also be accessed from the command line or from other scripts or functions. In this way the results (eigenvalues or eigenfunctions) computed by MATSLISE can easily be used into other applications written in MATLAB.
+</p>
+<p>We discuss here the syntax of the MATSLISE functions which need to be called in order to compute eigenvalues and eigenfunctions.  Note that the <tt>examples</tt> directory of the MATSLISE package contains many example scripts (<tt>.m</tt> files) illustrating the use of the different MATSLISE functions.</p>
+<p>Before the MATSLISE functions can be called, make sure the MATSLISE directory and its subdirectories are added to the search path.</p><p>
+<code>addpath(genpath('source'))<br>
+addpath(genpath('examples'))
+</code></p>
+
+<h2>Problem specification</h2>
+<h3>Syntax</h3>
+<p><code>slpObject = slp(p,q,w,xmin,xmax)
+</code></p>
+<p><code>slpObject = slp(p,q,w,xmin,xmax,a0,b0,a1,b1)
+</code></p>
+<p><code>slpObject = slp(p,q,w,xmin,xmax,a0,b0,a1,b1,jumps)
+</code></p>
+<h3>Description</h3>
+<p>The MATSLISE package contains a class called <tt>slp</tt> for storing all relevant data that defines a Sturm-Liouville problem (coefficient functions, <tt>x</tt>-domain,...) and also defines the operations the user can perform on the slp-object (computation of eigenvalues or eigenfunctions). An instance <tt>slpObject</tt> of the <tt>slp</tt> class is created by a call to the constructor:
+</p>
+<p><code>slpObject = slp(p,q,w,xmin,xmax)
+</code></p>
+The default boundary conditions are <tt>y(xmin)=y(xmax)=0</tt>. For more general boundary conditions of the form <tt>a0*y(xmin)+b0*p(xmin)*y'(xmin)=0</tt> and <tt>a1*y(xmax)+b1*p(xmax)*y'(xmax)=0</tt>, use the constructor
+<p><code>slpObject = slp(p,q,w,xmin,xmax,a0,b0,a1,b1)
+</code></p>
+<p>MATSLISE can also deal with coefficient functions which are continuous except for finitely many jumps. The location of the jumps has to be passed to the constructor:
+</p><p><code>slpObject = slp(p,q,w,xmin,xmax,a0,b0,a1,b1,jumps)
+</code></p><p>Examples of problems with jumps can be found in the examples directory within MATSLISE: <tt>testDC*.m</tt>. Note that problems with jumps can only be solved by calling the MATSLISE functions from the command line or from an <tt>.m</tt>-file, this functionality was not included into the Graphical User Interface.</p>
+
+<table cellspacing="0" class="body" cellpadding="4" border="2"><colgroup><col width="25%"><col width="0%"><col width="75%"></colgroup><tbody><tr valign="top"><td bgcolor="#F2F2F2"><tt>p</tt></td><td bgcolor="#F2F2F2" colspan="2">function handle to a MATLAB function implementing the coefficient function <tt>p(x)</tt>. The function definition line usually takes the form <tt>function r = p(x)</tt>.</td></tr>
+<tr valign="top"><td bgcolor="#F2F2F2"><tt>q</tt></td><td bgcolor="#F2F2F2" colspan="2">function handle to a MATLAB function implementing the coefficient function <tt>q(x)</tt>. The function definition line usually takes the form <tt>function r = q(x)</tt>.</td></tr>
+<tr valign="top"><td bgcolor="#F2F2F2"><tt>w</tt></td><td bgcolor="#F2F2F2" colspan="2">function handle to a MATLAB function implementing the coefficient function <tt>w(x)</tt>. The function definition line usually takes the form <tt>function r = w(x)</tt>.</td></tr>
+<tr valign="top"><td bgcolor="#F2F2F2"><tt>xmin,xmax</tt></td><td bgcolor="#F2F2F2" colspan="2">endpoints of the integration interval. MATLAB expressions may be entered, such as <tt>pi</tt> or <tt>inf</tt>.</td></tr>
+<tr valign="top"><td bgcolor="#F2F2F2"><tt>a0,b0,a1,b1</tt></td><td bgcolor="#F2F2F2" colspan="2">(optional) real values representing the coefficients of the boundary conditions. <tt>a0</tt> and <tt>b0</tt> are not both zero, and similarly for <tt>a1</tt> and <tt>b1</tt>.</td></tr>
+<tr valign="top"><td bgcolor="#F2F2F2"><tt>jumps</tt></td><td bgcolor="#F2F2F2" colspan="2">(optional) vector of <tt>x</tt>-values where a jump is situated in one of the coefficient functions.</td></tr>
+</tbody></table>
+
+
+<h2>Computation of the eigenvalues</h2>
+<h3>Syntax</h3>
+<p>
+<code>
+[E,mesh_data] = computeEigenvalues(slpObject,pmin,pmax,tol,indices)
+<br>
+[E,mesh_data] = computeEigenvalues(slpObject,pmin,pmax,tol,indices,mesh_data)
+</code></p> 
+<p>or equivalently</p>
+<p>
+<code>
+[E,mesh_data] = slpObject.computeEigenvalues(pmin,pmax,tol,indices)
+<br>
+[E,mesh_data] = slpObject.computeEigenvalues(pmin,pmax,tol,indices,mesh_data)
+</code></p> 
+
+
+<h3>Description</h3>
+<p><code>[E,mesh_data] = slpObject.computeEigenvalues(pmin,pmax,tol,indices)</code> computes the eigenvalues of a Sturm-Liouville problem. The values <code>pmin</code> and <code>pmax</code> and the boolean <code>indices</code> determine which eigenvalues need to be approximated. A mesh is automatically constructed. This mesh has stepsizes consistent with
+the user input tolerance tol.
+</p>
+<p><code>[E,mesh_data] = slpObject.computeEigenvalues(pmin,pmax,tol,indices,mesh_data)</code> computes the eigenvalues of a Sturm-Liouville problem. The values <code>pmin</code> and <code>pmax</code> and the boolean <code>indices</code> determine which eigenvalues need to be approximated. The mesh to be used is passed as an input argument. Usually this mesh was returned as a result of a previous eigenvalue computation. Note that for problems in the Liouville normal form the same mesh can be used for all eigenvalue computations and does not have to be reconstructed for each eigenvalue computation.
+</p>
+
+<h3>Input Arguments</h3>
+<table cellspacing="0" class="body" cellpadding="4" border="2"><colgroup><col width="25%"><col width="0%"><col width="75%"></colgroup><tbody><tr valign="top"><td bgcolor="#F2F2F2"><tt>slpObject</tt></td><td bgcolor="#F2F2F2" colspan="2">an instance of the <tt>slp</tt> class</td></tr>
+<tr valign="top"><td bgcolor="#F2F2F2"><tt>pmin, pmax</tt></td><td bgcolor="#F2F2F2" colspan="2">Two parameters specifying the lower and upper bound of the range of eigenvalues to compute (see <tt>indices</tt>).</td></tr>
+<tr valign="top"><td bgcolor="#F2F2F2"><tt>tol</tt></td><td bgcolor="#F2F2F2" colspan="2">a positive constant representing the accuracy requested in the results.</td></tr>
+<tr valign="top"><td bgcolor="#F2F2F2" rowspan="2"><tt>indices</tt></td><td bgcolor="#F2F2F2"><tt>true</tt></td><td bgcolor="#F2F2F2"><tt>pmin</tt> and <tt>pmax</tt> represent the lower index and the upper index of the range of eigenvalues searched for. <tt>pmin</tt> and <tt>pmax</tt> are positive integer values in this case.</td></tr>
+<tr valign="top"><td bgcolor="#F2F2F2"><tt>false</tt></td><td bgcolor="#F2F2F2"><tt>pmin</tt> and <tt>pmax</tt> represent the lower and upper limit of the energy-range to be scanned for eigenvalues. <tt>pmin</tt> and <tt>pmax</tt> are real values.</td></tr>
+<tr valign="top"><td bgcolor="#F2F2F2"><tt>mesh_data</tt></td><td bgcolor="#F2F2F2" colspan="2">(optional argument), a structure returned by a previous call to <tt>computeEigenvalues.</tt></td></tr>
+</tbody></table>
+
+<h3>Output Arguments</h3>
+<table cellspacing="0" class="body" cellpadding="4" border="2"><colgroup><col width="25%"><col width="0%"><col width="75%"></colgroup><tbody>
+<tr valign="top"><td bgcolor="#F2F2F2" rowspan="5"><tt>E</tt></td><td bgcolor="#F2F2F2"><tt>E.eigenvalues</tt></td><td bgcolor="#F2F2F2">a vector with the computed eigenvalues in the ascending order.</td></tr>
+<tr valign="top"><td bgcolor="#F2F2F2"><tt>E.indices</tt></td><td bgcolor="#F2F2F2">a vector with the indices of the computed eigenvalues.</td></tr>
+<tr valign="top"><td bgcolor="#F2F2F2"><tt>E.errors</tt></td><td bgcolor="#F2F2F2">a vector with the estimations of the errors in the computed eigenvalues.</td></tr>
+<tr valign="top"><td bgcolor="#F2F2F2"><tt>E.success</tt></td><td bgcolor="#F2F2F2">boolean value. <tt>true</tt> if the CP method ran successfully. <tt>false</tt>  if the CP-method wasn't able to obtain the data due to an error. <tt>E.msg</tt> contains the error message.</td>
+ </tr><tr valign="top"><td bgcolor="#F2F2F2"><tt>E.status</tt></td><td bgcolor="#F2F2F2">a vector of status flags. <tt>E.status(i)=0</tt> indicates that no difficulties were detected during the calculation of <tt>E.eigenvalues(i)</tt>. If <tt>E.status(i)>0</tt> difficulties were detected and the result in <tt>E.eigenvalues(i)</tt> may be inaccurate or wrong.   </td>
+ </tr>
+<tr valign="top"><td bgcolor="#F2F2F2"><tt>mesh_data</tt></td><td bgcolor="#F2F2F2" colspan="2">(optional argument), structure containing information on the constructed mesh. This structure can be passed as input argument in a next call to computeEigenvalues in order to avoid recomputation of the mesh.<br>
+<tt>mesh_data.h</tt>: vector of stepsizes<br>
+<tt>mesh_data.LNF</tt>: indicates if the problem is in Liouville normal form or not<br>
+<tt>mesh_data.Infa</tt>: truncated endpoint if the first endpoint is infinite<br>
+<tt>mesh_data.Infb</tt>: truncated endpoint if the second endpoint is infinite<br>
+<tt>mesh_data.trunca</tt>: number of intervals at the first endpoint which need to be refined to obtain a better regularized problem. <tt>mesh_data.trunca=0</tt> for regular problems, <tt>mesh_data.trunca=1</tt> for a singular first endpoint.<br>
+<tt>mesh_data.truncb</tt>: number of intervals at the second endpoint which need to be refined to obtain a better regularized problem. <tt>mesh_data.truncb=0</tt> for regular problems, <tt>mesh_data.truncb=1</tt> for a singular second endpoint.<br>
+<tt>mesh_data.radial</tt>: true if the adaptive perturbative procedure for radial Schrodinger equations was used in a small interval around the origin. In this case mesh_data.trunca=0, although the first endpoint is singular.<br>
+<tt>mesh_data.halfRangeReduction</tt>: indicates if half-range reduction was applied for a symmetric Sturm-Liouville problem.<br>
+<tt>mesh_data.V0/cu/cv/cup/cvp/...</tt>: data which depends on the mesh and is needed by the CP method.<br>
+
+</td></tr>
+</tbody></table>
+
+<h2>Eigenfunction Computations</h2>
+<h3>Syntax</h3>
+<p><pre><code>
+[x,y,yp,sq] = computeEigenfunction(slpObject,e,mesh_data)
+[x,y,yp,sq] = computeEigenfunction(slpObject,e,mesh_data,evalPoints)
+</code></pre></p>
+or equivalently
+<p><pre><code>
+[x,y,yp,sq] = slpObject.computeEigenfunction(e,mesh_data)
+[x,y,yp,sq] = slpObject.computeEigenfunction(e,mesh_data,evalPoints)
+</code></pre></p>
+
+<h3>Description</h3>
+<p><code>
+[x,y,yp,sq] = slpObject.computeEigenfunction(e,mesh_data)
+</code> evaluates the (normalized) eigenfunction corresponding to the eigenvalue <tt>e</tt> in the mesh points corresponding to <tt>mesh_data</tt>. Usually <tt>e</tt> is an eigenvalue approximation which was computed over the mesh in <tt>mesh_data</tt>,i.e. both <tt>e</tt> and  <tt>mesh_data</tt> were returned by <tt>computeEigenvalues</tt>. The output vector <tt>x</tt> contains the mesh points. The vectors <tt>y</tt> and <tt>yp</tt> contain the evaluations of the eigenfunction <tt>y(x)</tt> and the derivative <tt>p(x)y'(x)</tt> in these mesh points. 
+ </p>
+<p><code>
+[x,y,yp,sq] = slpObject.computeEigenfunction(e,mesh_data,evalPoints)
+</code> evaluates the (normalized) eigenfunction corresponding to the eigenvalue <tt>e</tt> in the vector of <tt>x</tt> values in <tt>evalPoints</tt>.  This can for instance be used to produce a more smooth graphical representation of the eigenfunction.</p>
+
+<h3>Input Arguments</h3>
+<table cellspacing="0" class="body" cellpadding="4" border="2"><colgroup><col width="25%"><col width="0%"><col width="75%"></colgroup><tbody>
+<tr valign="top"><td bgcolor="#F2F2F2"><tt>e</tt></td><td bgcolor="#F2F2F2">a real value: an eigenvalue. The eigenvalue should be sufficiently accurate in order to have a reliable eigenfunction computation.</td></tr>
+<tr valign="top"><td bgcolor="#F2F2F2"><tt>mesh_data</tt></td><td bgcolor="#F2F2F2">a structure returned by <tt>computeEigenvalues</tt>.</td></tr>
+<tr valign="top"><td bgcolor="#F2F2F2"><tt>evalPoints</tt></td><td bgcolor="#F2F2F2">(optional) a vector of <tt>x</tt>-points where the eigenfunction should be evaluated.</td></tr>
+</tbody></table>
+
+<h3>Output Arguments</h3>
+<table cellspacing="0" class="body" cellpadding="4" border="2"><colgroup><col width="25%"><col width="0%"><col width="75%"></colgroup><tbody>
+<tr valign="top"><td bgcolor="#F2F2F2"><tt>x</tt></td><td bgcolor="#F2F2F2">a vector with the <tt>x</tt>-values in which the eigenfunction was evaluated.</td></tr>
+<tr valign="top"><td bgcolor="#F2F2F2"><tt>y</tt></td><td bgcolor="#F2F2F2">a vector with the eigenfunction evaluations.</td></tr>
+<tr valign="top"><td bgcolor="#F2F2F2"><tt>yp</tt></td><td bgcolor="#F2F2F2">a vector with the evaluations of <tt>p(x)y'(x)</tt></td></tr>
+<tr valign="top"><td bgcolor="#F2F2F2"><tt>sq</tt></td><td bgcolor="#F2F2F2">(optional) estimation of the norm.</td>
+ </tr></tbody></table>
+<br>
+
+<h2>Examples</h2>
+<h3>A regular Sturm-Liouville problem</h3>
+<p>We will solve the third testproblem from the list of test problems from <i>J.D. Pryce, Numerical Solution of Sturm-Liouville Problems, Clarendon Press, 1993</i>. This problem is also included into the set of example problems in the MATSLISE <tt>examples</tt> directory (<tt>Klotter.m</tt>).</p> <p>First create an instance of the class <tt>slp</tt>:</p>
+<p><code>slpObject=slp(@p,@q,@w,8/7,8,1,0,1,0);
+</code></p>
+<p>The fourth and fifth input argument specify the integration domain of the problem, which is <tt>[8/7,8]</tt>. The boundary conditions are <tt>y(8/7)=y(8)=0</tt> which explains the last four input arguments. The first three arguments are function handles to the following functions:</p>
+<p><code>function r=p(x)<br>
+r=1;<br>
+end<br>
+ <br>
+function r=q(x)<br>
+r=3/(4*x^2);<br>
+end<br>
+ <br>
+function r=w(x)<br>
+r=64*pi^2/(9*x^6);<br>
+end<br>
+</code></p>
+<p>The created <tt>slp</tt> object can then be passed to the function <tt>computeEigenvalues</tt>, e.g. to compute the first 10 eigenvalues:</p><p>
+<code>[E,meshData] = slpObject.computeEigenvalues(0,9,1e-12,true);
+</code></p>
+<p>with an input tolerance <tt>10<super>-12</super></tt>.</p>
+<p>The eigenvalue structure returned is:</p><p><samp><pre>
+E = 
+
+    eigenvalues: [1x10 double]
+         errors: [1x10 double]
+        indices: [0 1 2 3 4 5 6 7 8 9]
+         status: [0 0 0 0 0 0 0 0 0 0]
+        success: 1
+</pre></samp></p>
+<p>The computed eigenvalues can be found in <tt>E.eigenvalues</tt></p><p>
+<samp><pre>
+ans =
+
+  1.0e+002 *
+
+  Columns 1 through 6
+
+   0.010000000000000   0.040000000000000   0.090000000000000   0.160000000000000   0.250000000000000   0.360000000000000
+
+  Columns 7 through 10
+
+   0.490000000000000   0.640000000000000   0.810000000000001   1.000000000000001</pre></samp></p>
+
+<p>The function <tt>computeEigenfunction</tt> computes then the eigenfunction associated to one of these eigenvalues. In the following piece of code, we use the  function <tt>computeEigenfunction</tt> to make a plot of the eigenfunction associated to the eigenvalue with index 4. The blue markers indicate the evaluations of the eigenfunction in the mesh points. Note that the CP method needs only 3 mesh points for this particular problem. Very large step sizes are thus taken for the computation of the eigenvalues. Evaluating the eigenfunction only in the three mesh points gives no clear idea about the shape of the eigenfunction. A second call to <tt>computeEigenfunction</tt> with a vector of <tt>x</tt> values as last input argument was used to generate the red smooth eigenfunction curve. The blue markers nicely lie on this red curve despite the large step size taken.</p>
+<p><code><pre>
+e=E.eigenvalues(5);
+figure
+[x,y,yp] = slpObject.computeEigenfunction(e,meshData);
+hold on
+plot(x,y,'b*')
+[x,y,yp] = slpObject.computeEigenfunction(e,meshData,linspace(8/7,8,200));
+plot(x,y,'r')
+hold off
+xlabel('x')
+title('Eigenfunction')</pre>
+</code></p>
+
+<img src="eigenfunctioncl.png" alt="eigenfunction example">
+
+<h3>A singular problem: hydrogen atom equation</h3>
+<p>We will solve testproblem 29 from the list of test problems from <i>J.D. Pryce, Numerical Solution of Sturm-Liouville Problems, Clarendon Press, 1993</i>. This problem is also included into the set of example problems in the MATSLISE <tt>examples</tt> directory (<tt>hydrogen.m</tt>).</p> <p>First create an instance of the class <tt>slp</tt>:</p>
+<p><code>slpObject=slp(@p,@q,@w,0,inf,1,0,1,0);
+</code></p>
+<p>The fourth and fifth input argument specify the integration domain of the problem, which is an infinite domain. The first three arguments are function handles to the following functions:</p>
+<p><samp><pre>
+function r=p(x)
+r=1;
+end
+ 
+function r=q(x) 
+r=-1/x+2/x^2;
+end
+ 
+function r=w(x)
+r=1;
+end
+</pre></samp></p>
+<p>The created <tt>slp</tt> object can then be passed to the function <tt>computeEigenvalues</tt>, e.g. to compute the first eigenvalues:</p><p>
+<code>[E,meshData] = computeEigenvalues(slpObject,0,10,1e-10,true);
+</code></p>
+<p>with an input tolerance <tt>10<super>-10</super></tt>.</p>
+<p>The computed eigenvalue approximations can be found in <tt>E.eigenvalues</tt>, given by </p>
+<p><samp><pre>
+ans =
+  Columns 1 through 6
+
+  -0.062499999999947  -0.027777777777612  -0.015624999999902-0.009999999999945  -0.006944444444426  -0.005102040816322
+
+  Columns 7 through 11
+
+  -0.003906249999989  -0.003086419753084  -0.002500000000003  -0.002066115702482  -0.001736111111115</p>
+</pre></samp></p>
+
+<p>The singular endpoints were automatically dealt with. To see at which <tt>x</tt> values the singular endpoints were truncated, we inspect the information in the <tt>mesh_data</tt> structure. <tt>mesh_data.Infb</tt> gives us the truncation point for the infinite endpoint: <tt>3.5257e+03</tt>. <tt>mesh_data.radial</tt> is true, which means that the singular endpoint in <tt>x=0</tt> was dealt with by the special perturbative procedure for radial Schrodinger equations around the origin.</p>
+<p>The CP methods are well suited to compute high-index eigenvalues. This computes the eigenvalue with index 100:</p>
+<p><samp><pre>
+E = computeEigenvalues(slpObject,1000,1000,1e-10,true)
+</pre></samp></p>
+<p>returning</p>
+<p><samp><pre>
+E = 
+
+    eigenvalues: -2.490029920199262e-007
+         errors: 2.220446049250313e-016
+        indices: 1000
+         status: 0
+        success: 1
+</pre></samp></p>
+
+
+<h3>A parameter-dependent problem</h3>
+<p>It is possible to use a parameter (or parameters) in the specification of the problem. These
+parameters can occur in the definition of the coefficients, and/or the range, and/or the
+boundary conditions. This allows to study the behaviour of the eigenvalue(s) or solution
+when the parameter changes. As an example we consider the Coffey-Evans equation which is a Schr&ouml;dinger problem with potential function</p>
+<center><img src="eq1.png" alt="Coffey-Evans problem"></center>
+<p>with the parameter <tt>B</tt> running through <tt>10:2.5:30</tt>, that is the values in [10, 12.5, . . . , 30].</p><p>The coefficient functions are</p>
+<p><pre><code>
+function r=p(x)
+r=1;
+end
+ 
+function r=q(b,x)
+r=-2*b*cos(2*x)+b^2*sin(2*x)^2;
+end
+ 
+function r=w(x)
+r=1;
+end
+</code></pre></p>
+<p>Note that the parameter <tt>B</tt> is passed as an input argument to the function <tt>q</tt>.</p>
+<p>We then create for each value of the parameter an instance of the  <tt>slp</tt> class, compute the eigenvalues and the eigenfunction with index 2:</p>
+<p><pre><code>
+Eigenvalues=[];Eigenfunction=[];
+for b=10:2.5:30
+   o=slp(@p,@(x) q(b,x),@w,-pi/2,pi/2,1,0,1,0);
+   [E,meshData] = o.computeEigenvalues(0,20,1e-12,true);
+   Eigenvalues=[Eigenvalues E.eigenvalues'];
+   [x,y,yp] = o.computeEigenfunction(E.eigenvalues(3),meshData,linspace(-pi/2,pi/2,100));
+   Eigenfunction=[Eigenfunction y'];
+end
+</code></pre></p>
+<p>The eigenvalues of the different problems
+are easily compared by plotting them. A plot is made of the first 21 eigenvalues.</p>
+<p><pre><code>
+figure
+set(gcf,'DefaultAxesColorOrder',hsv(10))
+plot(0:20,Eigenvalues,'LineStyle',':','Marker','.')
+xlabel('k')
+ylabel('E_k')
+legend('b=10','b=12.5','b=15','b=17.5','b=20','b=22.5','b=25','b=27.5','b=30');
+title('Eigenvalues')
+</code></pre></p>
+<img src="param1.png" alt="eigenvalues of parameter-dependent example">
+
+<p> The lower eigenvalues are clustered in groups of three with an isolated
+eigenvalue between clusters. Increasing the parameter makes more clusters appear and makes each
+one tighter. Also a plot of the eigenfunction is made:</p>
+<p><pre><code>
+figure
+set(gcf,'DefaultAxesColorOrder',hsv(10))
+plot(x,Eigenfunction)
+xlabel('x')
+ylabel('y_2')
+legend('b=10','b=12.5','b=15','b=17.5','b=20','b=22.5','b=25','b=27.5','b=30');
+axis tight
+title('Eigenfunction')
+</code></pre></p>
+<img src="param2.png" alt="eigenvalues of parameter-dependent example">
+
+
+</td></tr></table><p></p><table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0"><tr valign="top"><td align="left" width="20"><a href="matslise.html"><img src="b_prev.gif" border="0" align="bottom" alt="MATSLISE"></a>&nbsp;</td><td align="left">MATSLISE</td><td>&nbsp;</td><td align="right">How does the GUI work?</td><td align="right" width="20"><a href="gui.html"><img src="b_next.gif" border="0" align="bottom" alt="How does the GUI work?"></a></td></tr></table><br>
+ 
+</body></html>

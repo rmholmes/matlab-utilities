@@ -1,0 +1,42 @@
+function x = mpower(x,y)
+% x^y for AD objects.
+[m,n,p1] = size(x.tc);
+if (fix(y)==y)
+     ans=mpowerin(x,y);    
+elseif (x.tc(:,1)==0) && (p1-1<y) 
+    for i=1:p1
+        x.tc(:,:,i)=0;
+    end
+    ans=x;    
+elseif (x.tc(:,1)==0) && (p1-1>y)
+   error('x^y for SIMPLEADTAyL objects is not defined'); 
+else   
+ [m,n,p1] = size(x.tc);
+ y1=y*log(x);
+ ans=exp(y1); 
+end
+
+if isnumeric(y)
+    x.tc=[x.f(1)^y,y*(x.f(1)^(y-1))*x.f(2),y*((y-1)*(x.f(1)^(y-2))*x.f(2)*x.f(2)+(x.f(1)^(y-1))*x.f(3))];    
+elseif isnumeric(x)
+    y=AD(y);
+    L=log(x);
+    x.tc=[x^y.f(1),(x^y.f(1))*L*y.f(2),(x^y.f(1))*(L*y.f(2))^2+(x^y.f(1))*L*y.f(3),(x^y.f(1))*(L*y.f(2))^3+3*(x^y.f(1))*(L^2)*y.f(2)*y.f(3)+(x^y.f(1))*L*y.f(4)];
+    Z.a = y.a;
+    Z = class(Z,'AD');
+    
+else    
+    x=AD(x);
+    y=AD(y);
+    %enkel objecten die geëvalueerd werden in hetzelfde punt a mogen
+    %in de bewerking verwerkt worden.
+    if y.a ~= x.a
+    error('De objecten werden niet in hetzelfde punt a geëvalueerd.')
+    else
+    L=log(x);
+    L=L.f(1);
+    x.tc = [x.f(1)^y.f(1),x.f(1)^y.f(1)*(y.f(2)*L+(y.f(1)*x.f(2))/x.f(1)),x.f(1)^y.f(1)*(y.f(2)*L+(y.f(1)*x.f(2))/x.f(1))^2+x.f(1)^y.f(1)*(y.f(3)*L+(2*y.f(2)*x.f(2))/x.f(1)+(y.f(1)*x.f(3))/x.f(1)-(y.f(1)*(x.f(2)^2))/(x.f(1)^2)),x.f(1)^y.f(1)*(y.f(2)*L+(y.f(1)*x.f(2))/x.f(1))^3+3*x.f(1)^y.f(1)*(y.f(2)*L+(y.f(1)*x.f(2))/x.f(1))*(y.f(3)*L+(2*y.f(2)*x.f(2))/x.f(1)+(y.f(1)*x.f(3))/x.f(1)-(y.f(1)*(x.f(2)^2))/(x.f(1)^2))+x.f(1)^y.f(1)*(y.f(4)*L+(3*y.f(3)*x.f(2))/x.f(1)+(3*y.f(2)*x.f(3))/x.f(1)-(3*y.f(2)*(x.f(2)^2))/(x.f(1)^2)+(y.f(1)*x.f(4))/x.f(1)-(3*y.f(1)*x.f(3)*x.f(2))/(x.f(1)^2)+(2*y.f(1)*(x.f(2)^3))/(x.f(1)^3))];
+    Z.a = x.a;
+    Z = class(Z,'AD');
+    end
+end

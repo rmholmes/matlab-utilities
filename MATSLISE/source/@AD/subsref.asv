@@ -1,0 +1,27 @@
+function c = subsref(a,s)
+% Subscripted reference for AD objects.
+switch s.type
+    case '()'     
+      ind=s.subs{:};
+      switch ind
+      case 1, c = a.tc(1);
+      case 2, c = a.tc(2);
+      case 3, c = a.tc(3);    
+      otherwise 
+        error('invalid index reference for AD')
+      end
+    c = class(c,'simpleadtayl');
+  elseif strcmp(s(1).type,'.')     % subfield access
+    if strcmp(s(1).subs,'tc')
+      c=a.tc;
+    else
+      error('invalid subfield reference for simpleadtayl')
+    end
+  else
+    error('invalid index reference for simpleadtayl')
+  end
+  if length(s)==1
+    return
+  end
+  s = s(2:end);
+  a = c;

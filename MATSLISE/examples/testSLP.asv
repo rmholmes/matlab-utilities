@@ -1,0 +1,37 @@
+function testSLP
+%test problem for the SLCPM12 package (Paine problem)
+%o=slp(@p,@q,@w,0,-sqrt(0.2)+sqrt(0.2+2*pi),1,0,1,0);
+o=slp(@p,@q,@w,0,-sqrt(0.2)+sqrt(0.2+2*pi),0,1,0,1);
+disp(classificationInfo(o))
+
+[E,meshData] = computeEigenvalues(o,0,10,1e-12,true);
+e=E.eigenvalues(1);
+[x,y,yp] = computeEigenfunction(e,o,meshData)
+figure
+plot(x,y,'b')
+hol on
+plot(x,yp,'r')
+%[E,meshData] = computeEigenvalues(o,0,100,1e-12,false);
+disp('The first 11 eigenvalues:') 
+
+line='-----------------------------------------';
+disp(line)
+disp('  k     E_k           estimated error')
+disp(line)
+for i=1:length(E.eigenvalues)
+    fprintf('%4.0f  %16.12f  %+5.2e\n', E.indices(i),E.eigenvalues(i), E.errors(i))
+end
+disp(line)
+end
+
+function r=p(x)
+r=(sqrt(0.2)+x)^3;
+end
+
+function r=q(x) 
+r=4*(sqrt(0.2)+x);
+end
+
+function r=w(x)
+r=(sqrt(0.2)+x)^5;
+end

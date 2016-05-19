@@ -1,0 +1,33 @@
+% user is just a place holder and is changed to $USER via .bashrc alias
+% before calling matlab
+
+% add my toolboxes path at the end of the path
+matdir = '~/Dropbox/matlab_misc/';
+
+addpath(genpath([matdir, 'mymatlab']), '-end')
+addpath(genpath([matdir, 'ocefpaf-matlab']), '-end')
+addpath(genpath([matdir, 'mat-svn-toolboxes']), '-end')
+
+% snctools with java
+% This is wierd, javapath prepends the $HOME.
+javaaddpath([matdir(3:end), 'mymatlab/netcdfAll-4.2.jar'], '-end');
+setpref('SNCTOOLS', 'USE_JAVA', true);
+
+% Netcdf Toolbox global options (turn autoscale & autonan on)
+javaaddpath([matdir(3:end), '/mymatlab/njTools-2.0.10_jre1.6.jar'], '-end');
+global nctbx_options
+nctbx_options.theAutoNaN = 1;
+nctbx_options.theAutoscale = 1;
+
+% figure defaults
+set(0, ...
+    'DefaultAxesColor',      'white',...          % axes color white
+    'DefaultFigureColor',    'white', ...         % figure color white
+    'DefaultAxesTickLength',  [0.01, 0.01], ...   % tick length
+    'DefaultAxesFontSize',    16, ...             % axes font size
+    'DefaultTextFontSize',    16, ...             % text font size
+    'DefaultTextVerticalAlignment', 'middle', ... % vertical font alignment
+    'DefaultTextHorizontalAlignment', 'left', ... % horizontal font alignment
+    'DefaultFigurePaperPositionMode','auto')      % WYSIWYG
+
+cls

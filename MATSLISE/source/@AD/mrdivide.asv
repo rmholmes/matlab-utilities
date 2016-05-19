@@ -1,0 +1,35 @@
+function x = mrdivide(x,y)
+% Division x/y for AD objects
+    
+if isnumeric(y)
+    R = inverse(X);
+    Z.f=[Y*R.f(1),Y*R.f(2),Y*R.f(3),Y*R.f(4)];
+    Z.a = X.a;
+    Z = class(Z,'AD');
+elseif isnumeric(X)
+    Y=AD(Y);
+    Z.f = [Y.f(1)/X,Y.f(2)/X,Y.f(3)/X,Y.f(4)/X];
+    Z.a = Y.a;
+    Z = class(Z,'AD');
+else    
+    X=AD(X);
+    Y=AD(Y);
+    %enkel objecten die geëvalueerd werden in hetzelfde punt a mogen
+    %gedeeld worden door elkaar.
+    if Y.a ~= X.a
+    error('De objecten werden niet in hetzelfde punt a geëvalueerd.')
+    else
+    R = inverse(X);
+    Z.f = [Y.f(1)*R.f(1),R.f(2)*Y.f(1)+R.f(1)*Y.f(2),R.f(3)*Y.f(1)+2*R.f(2)*Y.f(2)+R.f(1)*Y.f(3),R.f(4)*Y.f(1)+3*R.f(3)*Y.f(2)+3*R.f(2)*Y.f(3)+R.f(1)*Y.f(4)];
+    Z.a = X.a;
+    Z = class(Z,'AD');
+    end
+end
+%functie inverse berekend de inverse 1/X van een object X.
+function Z = inverse(X)
+Z.f = [1/X.f(1),(-1/(X.f(1))^2)*X.f(2),(2*(X.f(2)^2))/(X.f(1)^3)-(1/(X.f(1))^2)*X.f(3),(-6*(X.f(2)^3))/(X.f(1)^4)+(6*X.f(2)*X.f(3))/(X.f(1)^3)-(1/(X.f(1))^2)*X.f(4)];
+Z = class(Z,'AD');
+
+
+
+

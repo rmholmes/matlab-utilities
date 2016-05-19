@@ -1,0 +1,4 @@
+function x = tanh(x)
+% Tanhx for AD objects.
+
+ x.tc = [tanh(x.tc(1)),(1-tanh(x.tx(1))^2)*x.tc(2),-2*tanh(x.tc(1))*(1-tanh(x.tc(1))^2)*x.tc(3)+(1-tanh(x.tc(1))^2)*x.tc(3)];

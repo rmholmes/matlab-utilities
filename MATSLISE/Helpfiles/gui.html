@@ -1,0 +1,103 @@
+ 
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html lang="en"><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <title>How to use the MATSLISE GUI</title><link rel="stylesheet" href="docstyle.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.52.2"><meta name="chunktype" content="refpage">
+  <meta http-equiv="Content-Script-Type" content="text/javascript"><meta name="toctype" content="fcn"><script language="JavaScript" src="docscripts.js"></script></head>
+<body><a name="top_of_page"></a><p style="font-size:1px;">&nbsp;</p>
+ 
+<a name="f76-678107"></a><a class="indexterm" name="zmw57dd0e312235"></a><h1 class="reftitle">How to use the MATSLISE GUI</h1><!-- SYNCHTO: f16-6011.html --><p class="purpose">MATSLISE can be used to solve differential equation eigenvalue problems that can be put in the general form of the classical Sturm-Liouville problem </p>
+<img src="eq2.png" alt="Sturm-Liouville problem">
+<p>
+on a finite or infinite interval with boundary conditions at the ends as appropriate. A value of the eigenparameter <tt>E</tt> for which there is a nontrivial solution - that is, not identically zero- subject to the boundary conditions, is called an eigenvalue, and the solution is the corresponding eigenfunction. We will illustrate how the MATSLISE GUI works by using it to compute the eigenvalues and eigenfunctions of the following problem: </p>
+<img src="eq3.png" alt="Problem 3 from the Pryce test set">
+<p>which has known analytic forms for its eigenvalues:</p>
+<img src="eq4.png" alt="Problem 3 from the Pryce test set"><p>This problem is included as an example problem which can be loaded into the MATSLISE GUI. Use the option <code>Open</code> from the <code>File</code> menu to open <code>Klotter.mat</code> from the MATSLISE <code>examples</code> directory.</p>
+
+<p>The GUI is simply opened by typing the command <tt>matslise</tt> at the Matlab command line:</p>
+<p><tt>>> matslise</tt></p>
+ 
+<p><tt></tt></p>
+<h2>Problem Specification</h2><p></p>
+<img src="ProblemSpecification.png" alt="Problem Specification Fields">
+<p>The figure shows the problem-specification fields for our example problem:
+</p>
+<ul>
+<li> <code>p(x)</code>: a stricly positive continuous function. </li>
+<li><code>q(x)</code>: a continuous function.</li>
+<li><code>w(x)</code>: a stricly positive continuous function. </li>
+<li><code>xmin,xmax</code>: the integration interval (real values)</li>
+<li>The boundary conditions</li>
+<li>Parameters</li>
+</ul>
+<p>In all fields Matlab notation needs to be used. Note that the user is allowed to enter <code>-inf</code> or <code>inf</code> 
+in the integration-interval-fields (<code>xmin</code> and <code>xmax</code>) in order to specify an infinite interval. 
+</p> 
+<p>The <tt>Plot</tt>-button can be used to generate a plot of the coefficient functions. The <tt>clear</tt>-button clears all the problem specification fields.</p>
+
+<p>It is possible to use a parameter in the input fields for the coefficient functions, the integration interval or the boundary conditions. When any of these input fields contains a parameter the user must enter the name of the parameter and the value in the Parameters input field.<br>
+<img src="parameter.png" alt="Parameter Specification Field"></p>
+<p>The parameter-fields can also be used to replace rather lengthy subexpressions in one of the coefficient functions by a parameter<br><img src="parameter2.png" alt="Parameter Specification Field"></p><p>
+Multiple parameters are separated by a comma:
+<br><img src="parameter3.png" alt="Parameter Specification Field"></p>
+
+ </p>
+
+<h2>Eigenvalue Computations</h2><p></p>
+<p><img src="Eigenvalues.png" alt="Example eigenvalue computations"></p>
+<p>The Eigenvalues-part of the MATSLISE GUI allows the user to calculate the eigenvalues of the problem he/she specified. There are two options: (i) one can calculate a set of eigenvalues with indices between a user-specified lower-and upper limit (ii) one can use MATSLISE to calculate eigenvalues between a lower and upper limit. Pressing the <tt>Compute</tt>-button starts the computations. When the computations have finished the results appear in the results listbox. The computed indices and eigenvalues are shown. Also for each eigenvalue approximation an (absolute) error estimation is given, which is the difference between this eigenvalue approximation and a reference approximation computed by a reference method (usually a higher order method). A positive double precision constant representing the accuracy requested by the    
+user can be entered in the Accuracy input field.</li>
+</p>
+
+<h3>Indices between...and...</h3><p>
+The user enters a lower and upper index. The eigenvalues with index between this lower and upper index will be calculated. One single eigenvalue is calculated when the upper index is equal to the lower index. The eigenvalues are indexed from 0, not 1. </p>
+
+<p><img src="Eigenvalues2.png" alt="Example eigenvalue computations"></p>
+<h3>Eigenvalues between...and...</h3><p>
+The user specifies the lower and upper limits of the interval to be scanned for eigenvalues, e.g. when the user wants to calculate the eigenvalues larger than 20 and smaller than 50, he enters 20 and 50 in the two inputfields. </p>
+
+<p><img src="Eigenvalues3.png" alt="Example eigenvalue computations"><p>
+
+<h3>Plotting the results</h3><p>The <tt>Plot</tt> button creates a graphical representation of the computed eigenvalues. A MATLAB figure window is opened with a plot of the eigenvalues with respect to their indices. The figure can be saved and edited like any MATLAB figure.</p><p>If the problem is in Liouville normal form (i.e. <code>p(x)=w(x)=1</code>) a second figure window is opened showing the eigenvalues together with the potential function <code>q(x)</code>.</p>
+<h3>Save results into MATLAB workspace</h3><p>The <tt>Workspace</tt> button allows the user to make the results accessible from the MATLAB workspace. In this way the eigenvalue approximations can be easily used in further computations.</p><p>
+<img src="Eigenvalues4.png" alt="Example eigenvalue computations"></p><p>The user enters variable names for the vectors of indices, eigenvalues and their estimated errors.</p>
+
+<br><br>
+<h2>Eigenfunction Computations</h2><p>After the computation of the eigenvalue approximations, one can use MATSLISE to compute the associated (normalized) eigenfunctions. Of course reliable evaluations of the eigenfunctions can only be obtained if the approximated eigenvalues are sufficiently accurate, i.e. the input accuracy tolerance should be sufficiently low and the eigenvalues are well-separated.</p><p>There are two popupmenus. The user can select an eigenfunction from the first popupmenu: only eigenfunctions for which an eigenvalue was computed can be selected. In the second popupmenu, the user has to specify if the eigenfunction needs to be evaluated only in the mesh points or in a vector of user-specified <tt>x</tt>-values.</p>
+<p>The <tt>Compute</tt>-button starts the eigenfunction computations and shows the obtained results in the listbox. Also a regular MATLAB plot of the eigenfunction <tt>y</tt> and its (pseudo)derivative <tt>py'</tt> is generated. The red dots correspond to the eigenfunction results which are listed in the listbox. Also a more smooth graphical representation of the eigenfunction is displayed in blue, which is the eigenfunction computed over a larger number of evaluation points spread over the problem domain. The figure can be edited like any MATLAB figure e.g. by using the figure toolbar. </p>
+
+<p> There are many possible uses for eigenfunction data. In order to allow the user to use the MATSLISE eigenfunction results in other applications, the eigenfunction evaluations computed in the MATSLISE GUI can be saved into workspace variables (vectors) using the <tt>Workspace</tt>-button </p>
+
+<p>When computing an eigenfunction, the <it>Computed Norm</it> is reported in the information-field in the lower right corner of the MATSLISE GUI. This number gives an estimation of the norm of the computed eigenfunction. A value which differs from one, indicates a lower accuracy of the computed eigenfunction. This may, for instance, occur when computing the ill-conditioned eigenfunctions associated with close eigenvalues.</p>
+
+<br>
+<h3>Evaluation of an eigenfunction in the mesh points</h3><p>
+In this case, a click on the <tt>Compute</tt>-button leads to the computation and the display of the eigenfunction <tt>y(x)</tt> and the derivative <tt>p(x)y'(x)</tt> in the mesh points as red dots in the figure windows. These mesh points are automatically generated by MATSLISE during the eigenvalue computations.
+</p>
+<p>
+<img src="Eigenfunction.png" alt="Example eigenfunction computations">
+</p>
+<br>
+<h3>Evaluation of an eigenfunction in user-specified points</h3><p>The number of mesh points needed by the CP algorithm is usually quite small. Evaluations of the eigenfunction in only these mesh points may be unsufficient to have a clear idea about the shape of the eigenfunction. Moreover there are many possible uses for eigenfunctions. In many cases, it may then be convenient for the user to be able to provide an array of <tt>x</tt> points and having the corresponding eigenfunction values returned. The array of  <tt>x</tt> points is a vector variable in the MATLAB workspace, the MATSLISE user is asked for the name of this variable.</p>
+
+<p>
+<img src="Eigenfunction2.png" alt="Example eigenfunction computations"></p>
+
+<br><br>
+<h2>Saving and loading problems in the MATSLISE GUI</h2>
+<p>Using the <tt>Open</tt> and <tt>Save As</tt> options in the <tt>File</tt> menu, the user can save a problem specification into a MAT-file and reopen it later.</p>
+<p>The MATSLISE package contains a directory <tt>examples</tt> with predefined problems which can be loaded into the MATSLISE GUI. This MATSLISE test set collects problems which are commonly used to test Sturm-Liouville software, some examples from physical applications and some classical mathematical problems. Many examples have been taken from earlier test sets:
+<ul><li> the list of test problems provided by John D. Pryce in the book <i>Numerical Solution of Sturm-Liouville Problems, Oxford University Press, 1993</i>
+and the SLTSTPAK package: <i> A test package for Sturm-Liouville solvers, ACM Trans. Math. Software 25 (1999).</i></li>
+<li> the catalogue of Sturm-Liouville problems composed by W.N. Everitt: <i> A Catalogue of Sturm-Liouville differential equations, in: Sturm-Liouville Theory.
+Past and Present, W.O. Amrein, A.M. Hinz, D.B. Pearson (eds), Birkhauser-Verlag 2005</i>.</li>
+</ul>
+</p>
+
+</td></tr></table><p></p><table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0"><tr valign="top"><td align="left" width="20"><a href="about.html"><img src="b_prev.gif" border="0" align="bottom" alt="MATSLISE"></a>&nbsp;</td><td align="left">What is MATSLISE?</td><td>&nbsp;</td><td align="right">Using MATSLISE via the command line?</td><td align="right" width="20"><a href="cl.html"><img src="b_next.gif" border="0" align="bottom" alt="How does the GUI work?"></a></td></tr></table><br>
+ 
+</body></html>
+
+
+

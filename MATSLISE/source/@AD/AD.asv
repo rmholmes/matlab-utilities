@@ -1,0 +1,15 @@
+function x =  AD(a)
+% Constructor for AD class.
+swith nargin
+case 0
+  x.tc = [0, 1, 0];
+        a.function = 'x';
+        a = class(a, 'autodiff');
+case 1
+if ~(isnumeric(a) && isscalar(a))
+    error('AD: Invalid input A')
+else
+    x.tc = [a, 1, 0];
+end
+x=class(x,'AD');
+end
