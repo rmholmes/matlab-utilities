@@ -7,7 +7,8 @@ if (exist('FontSize')==0)
 end
 
 txt = {'(a)','(b)','(c)','(d)','(e)','(f)',...
-       '(g)','(h)','(i)','(j)','(k)','(l)'};
+       '(g)','(h)','(i)','(j)','(k)','(l)',...
+       '(m)','(n)','(o)','(p)','(q)','(r)'};
 handl = zeros(n,1);
 for ii = 1:n
     %handl(ii) = uicontrol('style','text');

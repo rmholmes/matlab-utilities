@@ -22,8 +22,8 @@
 
 set(0,'DefaultAxesColorOrder',[0 0 0], ...
       'DefaultAxesLineStyleOrder','-|--|:|-.')
-set(0,'defaulttextfontsize',20);
-set(0,'defaultaxesfontsize',20);
+set(0,'defaulttextfontsize',15);
+set(0,'defaultaxesfontsize',15);
 set(0,'DefaultFigureColor',[1 1 1]);
 set(0,'defaultFigureRenderer','painters');
 set(0,'DefaultTextInterpreter', 'latex')
