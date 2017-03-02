@@ -8,10 +8,11 @@ end
 
 txt = {'(a)','(b)','(c)','(d)','(e)','(f)',...
        '(g)','(h)','(i)','(j)','(k)','(l)',...
-       '(m)','(n)','(o)','(p)','(q)','(r)'};
+       '(m)','(n)','(o)','(p)','(q)','(r)',...
+       '(s)','(t)','(u)','(v)','(w)','(x)'};
 handl = zeros(n,1);
 for ii = 1:n
-    %handl(ii) = uicontrol('style','text');
+    handl(ii) = uicontrol('style','text');
     set(handl(ii),'String',txt{ii},'FontSize',FontSize,'BackgroundColor', ...
                 'w','Position',[10 10 35 30]);
 end
