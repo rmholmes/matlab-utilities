@@ -15,7 +15,7 @@ if (exist('xp')==0)
     xp = 0.02;
 end
 if (exist('yp')==0)
-    xp = 0.94;
+    yp = 0.94;
 end
 
 
