@@ -56,25 +56,25 @@ switch type
     if (length(find(size(field) == 1))>0)
         tL = length(filtered_field);
         for t=(OneSide+1):(tL-OneSide)
-            filtered_field(t) = sum(field((t-OneSide):(t+OneSide)))/window;
+            filtered_field(t) = nanmean(field((t-OneSide):(t+OneSide)));%/window;
         end
         
     elseif (length(size(field)) == 2)
         tL = length(filtered_field(1,:));
         for t=(OneSide+1):(tL-OneSide)
-            filtered_field(:,t) = sum(field(:,((t-OneSide):(t+OneSide))),2)/window;
+            filtered_field(:,t) = nanmean(field(:,((t-OneSide):(t+OneSide))),2);%/window;
         end
         
     elseif (length(size(field)) == 3)
         tL = length(filtered_field(1,1,:));
         for t=(OneSide+1):(tL-OneSide)
-            filtered_field(:,:,t) = sum(field(:,:,((t-OneSide):(t+OneSide))),3)/window;
+            filtered_field(:,:,t) = nanmean(field(:,:,((t-OneSide):(t+OneSide))),3);%/window;
         end
     elseif (length(size(field)) == 4)
         tL = length(filtered_field(1,1,1,:));
         
         for t=(OneSide+1):(tL-OneSide)
-            filtered_field(:,:,:,t) = sum(field(:,:,:,((t-OneSide):(t+OneSide))),4)/window;
+            filtered_field(:,:,:,t) = nanmean(field(:,:,:,((t-OneSide):(t+OneSide))),4);%/window;
         end
     end
     

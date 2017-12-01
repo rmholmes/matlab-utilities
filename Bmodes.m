@@ -2,7 +2,9 @@ function [cs,Ss,Cs] = Bmodes(z,N2,m)
 %This script solves the Sturm-Louiville equation for the baroclinic
 %modes given an input N2 on z grid points. the largest m wave speeds
 %are returned in cs, with accompanying b/w normalized
-%eigenfunctions Ss (according to int
+%eigenfunctions Ss and u/v/p normalized eigenfunctions Cs.
+%
+% Ryan Holmes
 
 g = 9.81;
 N = length(z);
