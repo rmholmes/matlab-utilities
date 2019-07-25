@@ -2426,7 +2426,7 @@ if strcmp(get(ax,'XTickLabelMode'),'auto') && strcmp(get(ax,'XScale'),'linear')
             numlabels(ix) = str2num(axlabelx{ix});
         end
     else
-        numlabels = str2num(get(ax,'XTickLabel'));
+        numlabels = str2double(get(ax,'XTickLabel'));
     end
     labelpos = axxtick;%get(ax,'XTick');
     numlabels = numlabels(:);
@@ -2448,10 +2448,10 @@ if strcmp(get(ax,'YTickLabelMode'),'auto') && strcmp(get(ax,'YScale'),'linear')
         axlabely = get(ax, 'YTickLabel');
         numlabels = zeros(length(axlabely), 1);
         for ix = 1:length(axlabely)
-            numlabels(ix) = str2num(axlabely{ix});
+            numlabels(ix) = str2double(axlabely{ix});
         end        
     else
-        numlabels = str2num(get(ax,'YTickLabel'));
+        numlabels = str2double(get(ax,'YTickLabel'));
     end
     labelpos = axytick;%get(ax,'YTick');
     numlabels = numlabels(:);
